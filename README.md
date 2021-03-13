@@ -1,4 +1,4 @@
-### To download Node JS version 12: `https://nodejs.org/en/blog/release/v12.13.0/`
+### To download Node JS version 12: https://nodejs.org/en/blog/release/v12.13.0/
 
 
 ### To create a new React JS project:
