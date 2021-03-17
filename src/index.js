@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+// import HelloWorldReactApp from './HelloWorldReactApp';
+import LotteryReactApp from './LotteryReactApp';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    {/* <HelloWorldReactApp /> */}
+    <LotteryReactApp />
   </React.StrictMode>,
   document.getElementById('root')
 );

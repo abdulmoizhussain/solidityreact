@@ -1,24 +1,47 @@
-const HDWalletProvider = require('truffle-hdwallet-provider');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 const Web3 = require('web3');
-const compiledFactory = require('./build/HelloWorld.json');
+const fs = require('fs-extra');
+const path = require("path");
+const addressesOfDeployedContracts = require("./config/deployedAddress.json");
+const networkProvider = require('./config/networkProvider.json');
+const mnemonic = require('./config/mnemonic.json');
+const compiledContract = require('./build/Lottery.json');
 
-const provider = new HDWalletProvider(
-  'brief silly wife attract dose exhaust fix envelope buffalo notice enjoy gadget',
-  'https://rinkeby.infura.io/v3/710446b7873449289633bdf304a5135f'
-);
-const web3 = new Web3(provider);
+// source: https://www.npmjs.com/package/@truffle/hdwallet-provider
+const hdWalletProvider = new HDWalletProvider({
+  mnemonic: { phrase: mnemonic.phrase },
+  providerOrUrl: networkProvider.URL
+});
 
-const deploy = async () => {
-  const accounts = await web3.eth.getAccounts();
+const web3 = new Web3(hdWalletProvider);
 
-  console.log('Attempting to deploy from account', accounts[0]);
+async function deploy() {
+  try {
+    const accounts = await web3.eth.getAccounts();
+    const fromAccount = accounts[0];
 
-  const result = await new web3.eth.Contract(
-    JSON.parse(compiledFactory.interface)
-  )
-    .deploy({ data: compiledFactory.bytecode })
-    .send({ gas: '1000000', from: accounts[0] });
+    console.log('Attempting to deploy from account', fromAccount);
 
-  console.log('Contract deployed to', result.options.address);
+    // source https://web3js.readthedocs.io/en/v1.3.4/web3-eth-contract.html?highlight=deploy#deploy
+    const contractInstance = new web3.eth.Contract(compiledContract.abi);
+
+    const result = await contractInstance
+      .deploy({ data: compiledContract.evm.bytecode.object })
+      .send({ gas: '1000000', from: fromAccount });
+
+
+    addressesOfDeployedContracts.unshift(result.options.address);
+
+    fs.outputJSONSync(
+      path.join(__dirname, "config", "deployedAddress.json"),
+      addressesOfDeployedContracts,
+    );
+
+    console.log('Contract deployed to', result.options.address);
+  }
+  catch (err) {
+    console.log(err);
+  }
 };
+
 deploy();

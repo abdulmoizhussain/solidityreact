@@ -1,13 +1,14 @@
-pragma solidity ^0.4.17;
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.2;
 
 contract HelloWorld {
     string thisMessage;
 
-    function sendMessage(string message) public {
+    function sendMessage(string memory message) public {
         thisMessage = message;
     }
 
-    function fetchMessage() public view returns (string) {
+    function fetchMessage() public view returns (string memory) {
         return thisMessage;
     }
 }
