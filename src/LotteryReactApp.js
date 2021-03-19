@@ -9,10 +9,14 @@ function App() {
   const [selectedAddress, setSelectedAddress] = React.useState("");
   const [amount, setAmount] = React.useState("");
 
-  React.useEffect(async () => { // gets called at only first time render of react application.
-    const accounts = await web3.eth.getAccounts();
-    setAddresses(accounts);
-    setSelectedAddress(accounts[0]);
+  React.useEffect(() => { // gets called at only first time render of react application.
+    async  function asyncMethod () {
+      const accounts = await web3.eth.getAccounts();
+      setAddresses(accounts);
+      setSelectedAddress(accounts[0]);
+    }
+
+    asyncMethod();
   }, []);
 
   async function onClickLotteryEntrance() {
